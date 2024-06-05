@@ -1,11 +1,14 @@
 const express = require('express');
-const mongoose = require('mongoose')
-const dotenv = require('dotenv').config()
+const mongoose = require('mongoose');
+const dotenv = require('dotenv').config();
+const userRoute = require('./routes/userRoute.js');
 
 const PORT = 3000;
 const app = express();
+app.use(express.json())
 
 
+app.use('/user',userRoute);
 
 app.get('/health', (req,res)=>{
     //res.send  -  allows u to send a string
