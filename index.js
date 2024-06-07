@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv').config();
 const userRoute = require('./routes/userRoute.js');
 const jobRoute = require('./routes/jobRoute.js');
+const verifyToken = require('./middleware/verifyToken.js')
+
 
 const PORT = 3000;
 const app = express();
@@ -10,7 +12,7 @@ app.use(express.json())
 
 
 app.use('/user',userRoute);
-app.use('/job',jobRoute);
+app.use('/job', verifyToken, jobRoute);
 
 app.get('/health', (req,res)=>{
     //res.send  -  allows u to send a string

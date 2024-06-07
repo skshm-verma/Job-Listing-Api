@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const User = require('../model/User.js');
+const validateNewUser = require('../middleware/validateNewUser');
 
 router.get('/', (req, res) => {
     res.json({
@@ -12,7 +13,7 @@ router.get('/', (req, res) => {
 });
 
 // third case of data missing will be handled in the middleware section
-router.post('/register', async (req, res) => {         //declaring a section of that is non-blocking
+router.post('/register', validateNewUser, async (req, res) => {         //declaring a section of that is non-blocking
     const { name, email, password } = req.body;
 
     const existingUser = await User.findOne({ email });
