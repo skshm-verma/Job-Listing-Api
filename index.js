@@ -4,7 +4,7 @@ const dotenv = require('dotenv').config();
 const userRoute = require('./routes/userRoute.js');
 const jobRoute = require('./routes/jobRoute.js');
 const verifyToken = require('./middleware/verifyToken.js')
-
+const errorHandler = require('./middleware/errorHandler.js')
 
 const PORT = 3000;
 const app = express();
@@ -27,6 +27,15 @@ app.get('/health', (req,res)=>{
     })
 })
 
+app.use("*", (req, res) => {
+    res.status(404).json({
+        message: 'Endpoint not found',
+        status: 'Error',
+    });
+});
+//route for invalid routes access
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     mongoose

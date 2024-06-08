@@ -1,58 +1,77 @@
 const express = require('express');
 const router = express.Router();
 const Job = require('../model/Job.js');
-const validateNewJob = requrie('../middleware/validateNewJob.js')
+const validateNewJob = require('../middleware/validateNewJob.js')
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
 
-    const { minSalary, maxSalary, jobType, location, remote } = req.query;
-    console.log(minSalary, maxSalary, jobType, location);
-    const jobs = await Job.find(
-        {
-            monthlySalary: {
-                $gte: minSalary || 0,
-                $lte: maxSalary || 999999999
-            },
-            jobType: jobType || { $exists: true },
-            location: location || { $exists: true },
-            remote: remote == 'true' || { $exists: true }
-        }
-    );
+    try {
+        const { minSalary, maxSalary, jobType, location, remote, skills } = req.query;
 
-    res.status(200).json({
-        message: 'Job route is working fine',
-        status: 'Working',
-        jobs
-    })
+        const skillsArray = skills ? skills.split(",") : []
+        const jobs = await Job.find(
+            {
+                monthlySalary: {
+                    $gte: minSalary || 0,
+                    $lte: maxSalary || 999999999
+                },
+                jobType: jobType || { $exists: true },
+                location: location || { $exists: true },
+                remote: remote == 'true' || { $exists: true },
+                skillsRequired: { $all: skillsArray }
+            }
+        );
+
+        res.status(200).json({
+            message: 'Job route is working fine',
+            status: 'Working',
+            jobs
+        })
+    } catch (error) {
+        next({
+            message: 'Error Finding Job',
+            error
+        })
+    }
 });
 
 
-router.post('/add', validateNewJob, async (req, res) => {
-    const { companyName, logoUrl, jobPosition, monthlySalary, jobType, remote, location, jobDescription, aboutCompany, skillsRequired, additionalInformation, author } = req.body
+router.post('/add', validateNewJob, async (req, res, next) => {
 
-    const newJob = new Job({
-        companyName,
-        logoUrl,
-        jobPosition,
-        monthlySalary,
-        jobType,
-        remote,
-        location,
-        jobDescription,
-        aboutCompany,
-        skillsRequired,
-        additionalInformation,
-        author
-    })
+    try {
 
-    await newJob.save();
-    res.status(201).json({
-        message: 'Job added successfully',
-        jobId: newJob.id
-    })
+
+        const { companyName, logoUrl, jobPosition, monthlySalary, jobType, remote, location, jobDescription, aboutCompany, skillsRequired, additionalInformation, author } = req.body
+
+        const newJob = new Job({
+            companyName,
+            logoUrl,
+            jobPosition,
+            monthlySalary,
+            jobType,
+            remote,
+            location,
+            jobDescription,
+            aboutCompany,
+            skillsRequired,
+            additionalInformation,
+            author
+        })
+
+        await newJob.save();
+        res.status(201).json({
+            message: 'Job added successfully',
+            jobId: newJob.id
+        })
+    } catch (error) {
+        next({
+            message: 'Error while adding Job',
+            error
+        })
+    }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
     const jobId = req.params.id
 
     try {
@@ -65,9 +84,10 @@ router.get('/:id', async (req, res) => {
             });
         }
     } catch (error) {
-        res.status(400).json({
+        next({
             message: 'Job not found',
-        });
+            error
+        })
     }
 })
 

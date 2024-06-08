@@ -8,10 +8,10 @@ const validateNewJob = (req, res, next) => {
         });
     }
 
-    const validJobPositions = ["Full-Time", "Part-Time", "Internship"];
+    const validateJobTypes = ["Full-Time", "Part-Time", "Internship"];
     const validSkills = Array.isArray(skillsRequired) && skillsRequired.every(skill => typeof skill === 'string');
     const validMonthlySalary = typeof monthlySalary === 'number' && monthlySalary > 0;
-    const validJobPosition = validJobPositions.includes(jobType);
+    const validJobPosition = validateJobTypes.includes(jobType);
     const validLogoUrl = logoUrl.match(/^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg|webp))$/i); 
     //regular expression for validating logoUrl
 
