@@ -4,10 +4,8 @@ const Job = require('../model/Job.js');
 const validateNewJob = require('../middleware/validateNewJob.js')
 
 router.get('/', async (req, res, next) => {
-
     try {
         const { minSalary, maxSalary, jobType, location, remote, skills } = req.query;
-
         const skillsArray = skills ? skills.split(",") : []
         const jobs = await Job.find(
             {
@@ -21,7 +19,6 @@ router.get('/', async (req, res, next) => {
                 skillsRequired: { $all: skillsArray }
             }
         );
-
         res.status(200).json({
             message: 'Job route is working fine',
             status: 'Working',
@@ -37,12 +34,8 @@ router.get('/', async (req, res, next) => {
 
 
 router.post('/add', validateNewJob, async (req, res, next) => {
-
     try {
-
-
         const { companyName, logoUrl, jobPosition, monthlySalary, jobType, remote, location, jobDescription, aboutCompany, skillsRequired, additionalInformation, author } = req.body
-
         const newJob = new Job({
             companyName,
             logoUrl,
@@ -57,7 +50,6 @@ router.post('/add', validateNewJob, async (req, res, next) => {
             additionalInformation,
             author
         })
-
         await newJob.save();
         res.status(201).json({
             message: 'Job added successfully',
@@ -73,10 +65,8 @@ router.post('/add', validateNewJob, async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
     const jobId = req.params.id
-
     try {
         const job = await Job.findById(jobId);
-
         if (job) {
             res.status(200).json({
                 message: 'Job found',

@@ -16,9 +16,7 @@ router.get('/', (req, res) => {
 router.post('/register', validateNewUser, async (req, res, next) => {         //declaring a section of that is non-blocking
     try {
         const { name, email, password } = req.body;
-
         const existingUser = await User.findOne({ email });
-
         if (existingUser) {
             return res.status(400).json({
                 message: 'User already exist with this email',
@@ -49,11 +47,9 @@ router.post('/login', async (req, res, next) => {
     const { email, password } = req.body;
     try {
         const existingUser = await User.findOne({ email });
-
         if (existingUser) {
             const passwordCheck = await bcrypt.compare(password, existingUser.password);
             if (passwordCheck) {
-
                 const token = jwt.sign(
                     { email: existingUser.email }, //PAYLOAD : an object you want to convert to string/token
                     'secret', // Secret Key : that is being used for encrption and validation signature
@@ -75,7 +71,6 @@ router.post('/login', async (req, res, next) => {
                 message: "User not found",
             })
         }
-
     } catch (error) {
         next({
             message: "Error Logging In",
