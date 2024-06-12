@@ -1,28 +1,41 @@
 const validateNewJob = (req, res, next) => {
 
-    const { companyName, logoUrl, jobPosition, monthlySalary, jobType, location, jobDescription, aboutCompany, skillsRequired } = req.body
+    const { companyName, title, description, logoUrl, duration, jobPosition, monthlySalary, jobType, location, jobDescription, skills, refUserId } = req.body
 
-    if (!companyName || !logoUrl || !jobPosition || !monthlySalary || !jobType || !location || !jobDescription || !aboutCompany || !skillsRequired) {
+    if (!companyName || !title || !description || !logoUrl || !duration || !jobPosition || !monthlySalary || !jobType || !location || !jobDescription || !skills || !refUserId) {
         return res.status(400).json({
             message: 'Please provide all required fields',
         });
     }
 
     const validateJobTypes = ["Full-Time", "Part-Time", "Internship"];
-    const validSkills = Array.isArray(skillsRequired) && skillsRequired.every(skill => typeof skill === 'string');
+    const validSkills = Array.isArray(skills) && skills.every(skill => typeof skill === 'string');
     const validMonthlySalary = typeof monthlySalary === 'number' && monthlySalary > 0;
-    const validJobPosition = validateJobTypes.includes(jobType);
-    const validLogoUrl = logoUrl.match(/^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg|webp))$/i); 
+    const validJobType = validateJobTypes.includes(jobType);
+    const validLogoUrl = logoUrl.match(/^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg|webp))$/i);
     //regular expression for validating logoUrl
 
-    if (!validSkills || !validMonthlySalary || !validJobPosition || !validLogoUrl) {
+    if (!validSkills) {
         res.status(400).json({
-            message: 'Some fields are invalid, please check and try again',
+            message: 'Invalid Skills',
         });
-    } else {
-        next();
-    };
-
+    }
+    if (!validMonthlySalary) {
+        res.status(400).json({
+            message: 'Invalid MonthlySalary',
+        });
+    }
+    if (!validJobType) {
+        res.status(400).json({
+            message: 'Invalid JobType',
+        });
+    }
+    if (!validLogoUrl) {
+        res.status(400).json({
+            message: 'Invalid LogoUrl',
+        });
+    }
+    next();
 }
 
 module.exports = validateNewJob
