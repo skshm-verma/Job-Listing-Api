@@ -41,5 +41,4 @@ app.listen(PORT, () => {
     .connect(process.env.MONGO_URI)
     .then(() => console.log(`Server is running on PORT ${PORT}`))
     .catch((error) => { console.log('authentication failed : '+ error)})
-   
 })
