@@ -5,7 +5,7 @@ const validateNewJob = require('../middleware/validateNewJob.js');
 const verifyToken = require('../middleware/verifyToken.js');
 
 
-router.get('/', verifyToken, getFilteredJobs);
+router.get('/', getFilteredJobs);
 
 router.get('/:id', getJobById);
 

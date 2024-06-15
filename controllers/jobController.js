@@ -55,17 +55,16 @@ const createNewJob = async (req, res, next) => {
 
 const getFilteredJobs = async (req, res, next) => {
     try {
-        const { minSalary, maxSalary, jobType, location, remote, skills } = req.query;
+        const { minSalary, maxSalary, jobType, location, skills } = req.query;
         const skillsArray = skills ? skills.split(",") : []
         const jobs = await Job.find(
             {
-                monthlySalary: {
-                    $gte: minSalary || 0,
-                    $lte: maxSalary || 999999999
+                salary: {
+                    $gte: minSalary ? Number(minSalary) : 0, // Convert to number
+                    $lte: maxSalary ? Number(maxSalary) : 999999999 // Convert to number
                 },
                 jobType: jobType || { $exists: true },
                 location: location || { $exists: true },
-                remote: remote == 'true' || { $exists: true }
             }
         );
         const finalJobs = jobs.filter(job => {
@@ -88,74 +87,7 @@ const getFilteredJobs = async (req, res, next) => {
         })
     }
 };
-// const getFilteredJobs = async (req, res) => {
-//     try {
-//         const { minSalary, maxSalary, jobType, location, remote, skills } = req.query;
-//         console.log("Query Parameters:", req.query);
 
-//         const skillsArray = skills ? skills.split(",") : [];
-//         console.log("Skills Array:", skillsArray);
-
-//         const query = {
-//             monthlySalary: {
-//                 $gte: minSalary ? Number(minSalary) : 0, // Convert to number
-//                 $lte: maxSalary ? Number(maxSalary) : 999999999 // Convert to number
-//             },
-//             jobType: jobType || { $exists: true },
-//             location: location || { $exists: true },
-//             remote: remote === 'true' || { $exists: true },
-//             skills: { $all: skillsArray } // Ensure this matches your model field
-//         };
-
-//         console.log("Query Object:", query);
-
-//         const jobs = await Job.find(query);
-//         console.log("Jobs Found:", jobs);
-
-//         res.status(200).json({
-//             message: 'Job route is working fine',
-//             status: 'Working',
-//             jobs
-//         });
-//     } catch (error) {
-//         console.error("Error Finding Job:", error);
-//         next({
-//             message: 'Error Finding Job',
-//             error
-//         });
-//     }
-
-
-
-
-// try {
-//     const { minSalary, maxSalary, jobType, location, remote, skills } = req.query;
-//     const skillsArray = skills ? skills.split(",") : []
-//     const jobs = await Job.find(
-//         {
-//             monthlySalary: {
-//                 $gte: minSalary || 0,
-//                 $lte: maxSalary || 999999999
-//             },
-//             jobType: jobType || { $exists: true },
-//             location: location || { $exists: true },
-//             remote: remote == 'true' || { $exists: true }
-//         }
-//     );
-//     const finalJobs = jobs.filter(job => {
-//         let isSkillMatched = true;
-//         if (skillsArray.length > 0) {
-//             isSkillMatched = skillsArray.every(skill => job.skills.includes(skill));
-//         }
-//         return isSkillMatched;
-//     });
-
-//     res.status(200).json({
-//         message: 'Job route is working fine',
-//         status: 'Working',
-//         jobs: finalJobs
-//     })
-// };
 
 const updateExistingJob = async (req, res, next) => {
     try {
