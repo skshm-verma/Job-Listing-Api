@@ -5,7 +5,7 @@ const User = require('../model/User');
 function registerUser() {
     return async (req, res, next) => {     //declaring a section of that is non-blocking
         try {
-            const { name, email, password } = req.body;
+            const { name, email, mobile, password } = req.body;
             const existingUser = await User.findOne({ email: email });
             if (existingUser) {
                 return res.status(400).json({
@@ -16,6 +16,7 @@ function registerUser() {
                 const newUser = new User({
                     name,
                     email,
+                    mobile,
                     password: hashedPassword,
                 });
 
