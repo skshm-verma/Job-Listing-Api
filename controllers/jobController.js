@@ -1,6 +1,5 @@
 const Job = require('../model/Job.js');
 
-
 const getJobById = async (req, res, next) => {
     const jobId = req.params.id
     try {
