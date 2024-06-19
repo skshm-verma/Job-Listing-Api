@@ -53,30 +53,38 @@ const createNewJob = async (req, res, next) => {
 
 const getFilteredJobs = async (req, res, next) => {
     try {
-        const { minSalary, maxSalary, jobType, location, skills } = req.query;
-        const skillsArray = skills ? skills.split(",") : []
+        const { title, skills } = req.query;
+        console.log(title, skills);
         const jobs = await Job.find(
             {
-                salary: {
-                    $gte: minSalary ? Number(minSalary) : 0, // Convert to number
-                    $lte: maxSalary ? Number(maxSalary) : 999999999 // Convert to number
-                },
-                jobType: jobType || { $exists: true },
-                location: location || { $exists: true },
+                title: title || { $exists: true },
             }
         );
-        const finalJobs = jobs.filter(job => {
-            let isSkillMatched = true;
-            if (skillsArray.length > 0) {
-                isSkillMatched = skillsArray.every(skill => job.skills.includes(skill));
-            }
-            return isSkillMatched;
-        });
+
+        // const { minSalary, maxSalary, jobType, location, skills } = req.query;
+        // const skillsArray = skills ? skills.split(",") : []
+        // const jobs = await Job.find(
+        //     {
+        //         salary: {
+        //             $gte: minSalary ? Number(minSalary) : 0, // Convert to number
+        //             $lte: maxSalary ? Number(maxSalary) : 999999999 // Convert to number
+        //         },
+        //         jobType: jobType || { $exists: true },
+        //         location: location || { $exists: true },
+        //     }
+        // );
+        // const finalJobs = jobs.filter(job => {
+        //     let isSkillMatched = true;
+        //     if (skillsArray.length > 0) {
+        //         isSkillMatched = skillsArray.every(skill => job.skills.includes(skill));
+        //     }
+        //     return isSkillMatched;
+        // });
 
         res.status(200).json({
             message: 'Job route is working fine',
             status: 'Working',
-            jobs: finalJobs
+            jobs
         })
     } catch (error) {
         next({
