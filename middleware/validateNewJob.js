@@ -9,10 +9,12 @@ const validateNewJob = (req, res, next) => {
         });
     }
     const validJobTypes = ["Full-Time", "Part-Time", "Internship"];
+    const validLocationTypes = ["On-Site", "Remote", "Hybrid"];
     const validSkills = Array.isArray(skills) && skills.every(skill => typeof skill === 'string');
     const validSalary = typeof salary === 'number' && salary > 0;
     const validJobType = validJobTypes.includes(jobType);
     const validLogoUrl = logoUrl.match(/^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg|webp))$/i);
+    const validLocationType = validLocationTypes.includes(locationType);
 
     if (!validJobType) {
         return res.status(400).json({
@@ -32,6 +34,11 @@ const validateNewJob = (req, res, next) => {
     if (!validLogoUrl) {
         return res.status(400).json({
             message: 'Invalid logo URL',
+        });
+    }
+    if (!validLocationType) {
+        return res.status(400).json({
+            message: 'Invalid location type',
         });
     }
     next();
