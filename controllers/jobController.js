@@ -54,7 +54,6 @@ const createNewJob = async (req, res, next) => {
 const getFilteredJobs = async (req, res, next) => {
     try {
         const { title, skills } = req.query;
-        console.log(title, skills);
         const jobs = await Job.find(
             {
                 title: title || { $exists: true },
