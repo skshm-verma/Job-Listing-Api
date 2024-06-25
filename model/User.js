@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
         trim: true
     },
     email: {
-        type: String,  //regex to parse or validate email
+        type: String,  
         trim: true,
         required: true,
         unique: true

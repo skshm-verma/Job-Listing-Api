@@ -1,7 +1,6 @@
 const validateNewJob = (req, res, next) => {
 
     const { companyName, title, description, logoUrl, salary, location, duration, locationType, information, jobType, skills } = req.body;
-    console.log("Request Body: ",req.body);
     const refUserId = req.refUserId;
     const parsedSalary = parseInt(salary);
 

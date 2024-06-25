@@ -48,11 +48,11 @@ function handleLogin() {
                         'secret', // Secret Key : that is being used for encrption and validation signature
                         { expiresIn: '1h' } //Optional argument, to make the token temporary
                     )
-
                     res.status(200).json({
                         message: "Login Successful",
                         email: existingUser.email,
-                        token,
+                        id: existingUser._id,
+                        token
                     });
                 } else {
                     res.status(400).json({
