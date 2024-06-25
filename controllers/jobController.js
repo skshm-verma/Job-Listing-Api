@@ -53,32 +53,23 @@ const createNewJob = async (req, res, next) => {
 
 const getFilteredJobs = async (req, res, next) => {
     try {
-        const { title, skills } = req.query;
-        const jobs = await Job.find(
-            {
-                title: title || { $exists: true },
-            }
-        );
+        const { title, skills, minSalary, maxSalary } = req.query;
+        const queryObject = {}
 
-        // const { minSalary, maxSalary, jobType, location, skills } = req.query;
-        // const skillsArray = skills ? skills.split(",") : []
-        // const jobs = await Job.find(
-        //     {
-        //         salary: {
-        //             $gte: minSalary ? Number(minSalary) : 0, // Convert to number
-        //             $lte: maxSalary ? Number(maxSalary) : 999999999 // Convert to number
-        //         },
-        //         jobType: jobType || { $exists: true },
-        //         location: location || { $exists: true },
-        //     }
-        // );
-        // const finalJobs = jobs.filter(job => {
-        //     let isSkillMatched = true;
-        //     if (skillsArray.length > 0) {
-        //         isSkillMatched = skillsArray.every(skill => job.skills.includes(skill));
-        //     }
-        //     return isSkillMatched;
-        // });
+        if (title) {
+            queryObject.title = { $regex: title, $options: 'i' };
+        }
+        if (skills && skills.length > 0) {
+            queryObject.skills = { $in: skills };
+        }
+        if (minSalary) {
+            queryObject.salary = { $gte: minSalary ? Number(minSalary) : 0, };
+        }
+        if (maxSalary) {
+            queryObject.salary = { $lte: maxSalary ? Number(maxSalary) : 999999999 }
+        }
+
+        const jobs = await Job.find(queryObject);
 
         res.status(200).json({
             message: 'Job route is working fine',
