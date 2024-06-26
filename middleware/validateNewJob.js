@@ -5,9 +5,10 @@ const validateNewJob = (req, res, next) => {
     const parsedSalary = parseInt(salary);
 
     if (!companyName || !title || !description || !logoUrl || !parsedSalary || !location || !duration || !locationType || !information || !jobType || !skills || !refUserId) {
-        return res.status(400).json({
-            message: 'Please provide all required fields',
-        });
+        const error = new Error(`Missing required fields ${!companyName ? 'companyName' : ''}${!title ? 'title' : ''}${!description ? 'description' : ''}${!logoUrl ? 'logoUrl' : ''}${!parsedSalary ? 'salary' : ''}${!location ? 'location' : ''}${!duration ? 'duration' : ''}${!locationType ? 'locationType' : ''}${!information ? 'information' : ''}${!jobType ? 'jobType' : ''}${!skills ? 'skills' : ''}${!refUserId ? 'refUserId' : ''}`);
+        error.statusCode = 400;
+        console.log(error);
+        throw error;
     }
 
     const validJobTypes = ["Full-Time", "Part-Time", "Internship"];
@@ -17,7 +18,7 @@ const validateNewJob = (req, res, next) => {
     const validJobType = validJobTypes.includes(jobType);
     const validLogoUrl = logoUrl.match(/^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg|webp))$/i);
     const validLocationType = validLocationTypes.includes(locationType);
-        
+
     if (!validJobType) {
         return res.status(400).json({
             message: 'Invalid job type',
