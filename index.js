@@ -8,13 +8,13 @@ const cors = require('cors');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
-app.use(cors(
-    {
-        origin: ["https://frontend-job-listing.vercel.app/"],
-        methods: ["POST", "GET", "PATCH", "PUT", "DELETE"],
-        credentials: true
-    }
-));
+
+// Configure CORS
+app.use(cors({
+    origin: ["https://frontend-job-listing.vercel.app"],
+    methods: ["POST", "GET", "PATCH", "PUT", "DELETE"],
+    credentials: true
+}));
 app.use(express.json())
 
 app.use('/user',userRoute);
