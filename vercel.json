@@ -1,5 +1,6 @@
 {
     "version": 2,
+    "name" : "Job-Finder",
     "builds": [
       {
         "src": "index.js",
@@ -7,6 +8,6 @@
       }
     ],
     "routes": [
-      { "src": "/(.*)", "dest": "/" }
+      { "src": "/(.*)", "dest": "/index.js" }
     ]
   }
