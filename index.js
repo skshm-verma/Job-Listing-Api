@@ -9,12 +9,6 @@ const cors = require('cors');
 const PORT = process.env.PORT || 3000;
 const app = express();
 
-// // Configure CORS
-// app.use(cors({
-//     origin: ["https://frontend-job-listing.vercel.app"],
-//     methods: ["POST", "GET", "PATCH", "PUT", "DELETE"],
-//     credentials: true
-// }));
 app.use(cors());
 app.use(express.json())
 
@@ -56,6 +50,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
+//another way to write and connect with MongoDb
 // app.listen(PORT, () => {
 //     mongoose
 //     .connect(process.env.MONGO_URI)

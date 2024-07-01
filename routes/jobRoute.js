@@ -15,9 +15,4 @@ router.put('/update/:id', verifyToken, validateNewJob, updateExistingJob);
 
 router.delete('/delete/:id', verifyToken, deleteJob);
 
-
-// router.get('/', getFilteredJobs);
-// router.post('/add', validateNewJob, createNewJob);
-// router.get('/:id', getJobById)
-
 module.exports = router;
